@@ -18,7 +18,7 @@ CONTROLE FINANCEIRO
 
 def menu_receita():
     print("\nAdicionar Receita\n\nDigite 0 para voltar")
-    valor = int(input("\nDigite um valor: ")) 
+    valor = float(input("\nDigite um valor: ")) 
 
     if valor == 0:
         menu_inicial()
@@ -39,7 +39,7 @@ def menu_receita():
          print(input("\nErro: Todos os campos devem ser preenchidos com valores válidos, pressione Enter para continuar."))
 def menu_despesa():
     print("\nAdicionar Despesa\n\nDigite 0 para voltar")
-    valor = int(input("\nDigite um valor: ")) 
+    valor = float(input("\nDigite um valor: ")) 
 
     if valor == 0:
         menu_inicial()
@@ -58,9 +58,18 @@ def menu_despesa():
     else:
         print(input("\nErro: Todos os campos devem ser preenchidos com valores válidos, pressione Enter para continuar."))
 
+def menu_listar():
+    with open("movimentacoes.json", "r", encoding="utf-8") as movimentacoes:
+        dados = json.load(movimentacoes)
+
+        for movimetacao in dados:
+            print(f"{movimetacao['tipo']} \n    valor: R${movimetacao['valor']} \n    descrição: {movimetacao['descricao']} \n    categoria: {movimetacao['categoria']}")
+    input("\nPressione ENTER para continuar...")
 while True:
     escolha = menu_inicial()
     if escolha == 1:
         menu_receita()     
     elif escolha == 2:
         menu_despesa()  
+    elif escolha == 3:
+        menu_listar()
