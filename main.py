@@ -1,4 +1,4 @@
-from classes import Receita
+from classes import Receita, Despesa
 import json
 
 def menu_inicial():
@@ -24,8 +24,8 @@ def menu_receita():
         menu_inicial()
         return
 
-    descricao = input("\nEscreva uma descrição: ")
-    categoria = input("\nA qual categoria essa receita faz parte? ")
+    descricao = input("\nEscreva uma descrição: ").lower()
+    categoria = input("\nA qual categoria essa receita faz parte? ").lower()
     
     if valor > 0  and descricao != "" and categoria != "":
         with open("movimentacoes.json", "r", encoding="utf-8") as movimentacoes:
@@ -37,14 +37,30 @@ def menu_receita():
                     json.dump(dados, movimentacoes, ensure_ascii=False, indent=4)
     else:
          print(input("\nErro: Todos os campos devem ser preenchidos com valores válidos, pressione Enter para continuar."))
+def menu_despesa():
+    print("\nAdicionar Despesa\n\nDigite 0 para voltar")
+    valor = int(input("\nDigite um valor: ")) 
+
+    if valor == 0:
+        menu_inicial()
+        return
+
+    descricao = input("\nEscreva uma descrição: ").lower()
+    categoria = input("\nA qual categoria essa despesa faz parte? ").lower()
+
+    if valor > 0 and descricao != "" and categoria != "":
+        with open("movimentacoes.json", "r", encoding="utf-8") as movimentacoes:
+            dados = json.load(movimentacoes)
+            despesa = Despesa(valor, descricao, categoria)
+            dados.append(despesa.dicionario())
+            with open("movimentacoes.json", "w", encoding="utf-8") as movimentacoes:
+                json.dump(dados, movimentacoes, ensure_ascii=False, indent=4)
+    else:
+        print(input("\nErro: Todos os campos devem ser preenchidos com valores válidos, pressione Enter para continuar."))
+
 while True:
     escolha = menu_inicial()
     if escolha == 1:
-        menu_receita()
-
-
-
-
-
-
-        
+        menu_receita()     
+    elif escolha == 2:
+        menu_despesa()  
