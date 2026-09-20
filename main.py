@@ -1,6 +1,15 @@
 from classes import Receita, Despesa
 import json
 
+with open("movimentacoes.json", "r", encoding="utf-8") as movimentacoes:
+    dados = json.load(movimentacoes)
+    saldo = 0
+    for movimentacao in dados:
+        if movimentacao["tipo"] == "Receita":
+            saldo += movimentacao["valor"]
+        elif movimentacao["tipo"] == "Despesa":
+            saldo -= movimentacao["valor"] 
+
 def menu_inicial():
     print("""
 CONTROLE FINANCEIRO
@@ -65,6 +74,12 @@ def menu_listar():
         for movimetacao in dados:
             print(f"{movimetacao['tipo']} \n    valor: R${movimetacao['valor']} \n    descrição: {movimetacao['descricao']} \n    categoria: {movimetacao['categoria']}")
     input("\nPressione ENTER para continuar...")
+
+def menu_saldo():
+    print(f"seu saldo é de: R${saldo}")
+    input("\nPressione ENTER para continuar...")
+
+    
 while True:
     escolha = menu_inicial()
     if escolha == 1:
@@ -73,3 +88,5 @@ while True:
         menu_despesa()  
     elif escolha == 3:
         menu_listar()
+    elif escolha == 4:
+        menu_saldo()
