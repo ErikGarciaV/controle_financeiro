@@ -90,3 +90,5 @@ while True:
         menu_listar()
     elif escolha == 4:
         menu_saldo()
+    elif escolha == 6:
+        break
