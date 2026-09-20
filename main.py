@@ -1,14 +1,8 @@
+from datetime import datetime
 from classes import Receita, Despesa
 import json
 
-with open("movimentacoes.json", "r", encoding="utf-8") as movimentacoes:
-    dados = json.load(movimentacoes)
-    saldo = 0
-    for movimentacao in dados:
-        if movimentacao["tipo"] == "Receita":
-            saldo += movimentacao["valor"]
-        elif movimentacao["tipo"] == "Despesa":
-            saldo -= movimentacao["valor"] 
+
 
 def menu_inicial():
     print("""
@@ -70,16 +64,31 @@ def menu_despesa():
 def menu_listar():
     with open("movimentacoes.json", "r", encoding="utf-8") as movimentacoes:
         dados = json.load(movimentacoes)
-
-        for movimetacao in dados:
-            print(f"{movimetacao['tipo']} \n    valor: R${movimetacao['valor']} \n    descrição: {movimetacao['descricao']} \n    categoria: {movimetacao['categoria']}")
+        tipo = ""
+        for movimentacao in dados:
+            if movimentacao["tipo"] == "Receita":
+                tipo = "+"
+            elif movimentacao["tipo"] == "Despesa":
+                tipo = "-"
+            
+            if movimentacao["mes"] == datetime.now().month:
+                print(f"{movimentacao['descricao']} {tipo} R${movimentacao['valor']}")
     input("\nPressione ENTER para continuar...")
 
 def menu_saldo():
+    saldo = 0
+    with open("movimentacoes.json", "r", encoding="utf-8") as movimentacoes:
+        dados = json.load(movimentacoes)
+        for movimentacao in dados:
+            if movimentacao["tipo"] == "Receita":
+                saldo += movimentacao["valor"]
+            elif movimentacao["tipo"] == "Despesa":
+                saldo -= movimentacao["valor"] 
+
     print(f"seu saldo é de: R${saldo}")
+
     input("\nPressione ENTER para continuar...")
 
-    
 while True:
     escolha = menu_inicial()
     if escolha == 1:
