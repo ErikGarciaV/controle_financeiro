@@ -6,7 +6,7 @@ import subprocess
 
 
 def menu_inicial():
-    subprocess.run("cls", shell=True)
+    subprocess.run("cls", shell=True) # limpa o terminal
     print("""
 ╔═══════════════════════════════╗
 ║      CONTROLE FINANCEIRO      ║ 
@@ -39,14 +39,14 @@ def menu_receita():
     descricao = input("Escreva uma descrição: ").lower()
     categoria = input("A qual categoria essa receita faz parte? ").lower()
     
-    if valor > 0  and descricao != "" and categoria != "":
+    if valor > 0  and descricao != "" and categoria != "": #se o valor digitado for maior que 0 e a descrição e categoria não estiverem vazias ele vai adicionar a receita
         with open("movimentacoes.json", "r", encoding="utf-8") as movimentacoes:
             dados = json.load(movimentacoes)
             receita = Receita(valor, descricao, categoria)
             dados.append(receita.dicionario())
 
-            with open("movimentacoes.json", "w", encoding="utf-8") as movimentacoes:
-                    json.dump(dados, movimentacoes, ensure_ascii=False, indent=4)
+            with open("movimentacoes.json", "w", encoding="utf-8") as movimentacoes: 
+                    json.dump(dados, movimentacoes, ensure_ascii=False, indent=4) #aqui ele salva o arquivo
     else:
          print(input("\nErro: Todos os campos devem ser preenchidos com valores válidos, pressione Enter para continuar."))
 def menu_despesa():
@@ -66,11 +66,12 @@ def menu_despesa():
     descricao = input("Escreva uma descrição: ").lower()
     categoria = input("A qual categoria essa despesa faz parte? ").lower()
 
-    if valor > 0 and descricao != "" and categoria != "":
+    if valor > 0 and descricao != "" and categoria != "": #se o valor digitado for maior que 0 e a descrição e categoria não estiverem vazias ele vai adicionar a despesa
         with open("movimentacoes.json", "r", encoding="utf-8") as movimentacoes:
             dados = json.load(movimentacoes)
             despesa = Despesa(valor, descricao, categoria)
             dados.append(despesa.dicionario())
+
             with open("movimentacoes.json", "w", encoding="utf-8") as movimentacoes:
                 json.dump(dados, movimentacoes, ensure_ascii=False, indent=4)
     else:
@@ -81,13 +82,13 @@ def menu_listar():
     with open("movimentacoes.json", "r", encoding="utf-8") as movimentacoes:
         dados = json.load(movimentacoes)
         tipo = ""
-        for movimentacao in dados:
+        for movimentacao in dados: #ele identifica qual é o tipo da movimentação para adicionar o sinal certo no print
             if movimentacao["tipo"] == "Receita":
                 tipo = "+"
             elif movimentacao["tipo"] == "Despesa":
                 tipo = "-"
             
-            if movimentacao["mes"] == datetime.now().month:
+            if movimentacao["mes"] == datetime.now().month: # se o mês da movimentação for igual ao mes atual ele lista
                 print(f"{movimentacao['descricao']} {tipo} R${movimentacao['valor']}")
     input("\nPressione ENTER para continuar...")
 
@@ -126,9 +127,9 @@ def menu_relatorios():
         with open("movimentacoes.json", "r", encoding="utf-8") as movimentacoes:
             dados = json.load(movimentacoes)
             for movimentacao in dados:
-                if movimentacao["tipo"] == "Receita" and movimentacao["mes"] == datetime.now().month:
+                if movimentacao["tipo"] == "Receita" and movimentacao["mes"] == datetime.now().month: # soma todas as receitas do mes atual e salva na variavel total_receitas
                     total_receitas += movimentacao["valor"]
-                elif movimentacao["tipo"] == "Despesa" and movimentacao["mes"] == datetime.now().month:
+                elif movimentacao["tipo"] == "Despesa" and movimentacao["mes"] == datetime.now().month: # soma todas as despesas do mes atual e salva na variavel total_despesas
                     total_despesas += movimentacao["valor"]
             saldo_mensal = total_receitas - total_despesas
             print(f"""
@@ -143,6 +144,7 @@ def menu_relatorios():
  """)
             
         input("\nPressione ENTER para continuar...")
+
 
     while True:
         print(f"""
