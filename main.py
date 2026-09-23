@@ -89,7 +89,7 @@ def menu_listar():
                 tipo = "-"
             
             if movimentacao["mes"] == datetime.now().month: # se o mês da movimentação for igual ao mes atual ele lista
-                print(f"{movimentacao['descricao']} {tipo} R${movimentacao['valor']}")
+                print(f"{movimentacao['descricao']} {tipo} R${movimentacao['valor']:.2f}")
     input("\nPressione ENTER para continuar...")
 
 def calcular_saldo():
@@ -111,7 +111,7 @@ def menu_saldo():
 ╔═══════════════════════════════╗
 ║             SALDO             ║ 
 ╠═══════════════════════════════╣
-            R${saldo}           
+            R${saldo:.2f}           
 ╚═══════════════════════════════╝""")
     
     input("\nPressione ENTER para continuar...")
@@ -119,7 +119,6 @@ def menu_saldo():
 
 def menu_relatorios():
     subprocess.run("cls", shell=True)
-    saldo = calcular_saldo()
     def relatorio_mensal():
         subprocess.run("cls", shell=True)
         total_receitas = 0
@@ -136,15 +135,30 @@ def menu_relatorios():
 ╔═══════════════════════════════╗
 ║       RELATÓRIO MENSAL        ║
 ╠═══════════════════════════════╣
-║Receitas: R${total_receitas}
-║Despesas: R${total_despesas}
+║Receitas: R${total_receitas:.2f}
+║Despesas: R${total_despesas:.2f}
 ╠═══════════════════════════════╣
-║Saldo: R${saldo_mensal}
+║Saldo: R${saldo_mensal:.2f}
 ╚═══════════════════════════════╝
  """)
             
         input("\nPressione ENTER para continuar...")
+        
+    def menu_maior_despesa():
+        subprocess.run("cls", shell=True)
+        maior_despesa = 0
+        descricao = ""
+        with open("movimentacoes.json", "r", encoding="utf-8") as movimentacoes:
+            dados = json.load(movimentacoes)
 
+            for movimentacao in dados:
+                if movimentacao["tipo"] == "Despesa" and movimentacao["mes"] == datetime.now().month:
+                    if movimentacao["valor"] > maior_despesa:
+                        maior_despesa = movimentacao["valor"]
+                        descricao = movimentacao["descricao"]
+
+        print(f"a maior despesa é {descricao} R${maior_despesa:.2f}")
+        input("\nPressione ENTER para continuar...")
 
     while True:
         print(f"""
@@ -159,6 +173,8 @@ def menu_relatorios():
         escolha = int(input("\nDigite um numero: "))
         if escolha == 1:
             relatorio_mensal()     
+        elif escolha == 3:
+            menu_maior_despesa()
         elif escolha == 4:
             break
 
